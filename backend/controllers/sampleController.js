@@ -21,6 +21,22 @@ class SampleController
                 return res.status(400).json({ message: "No se subió ningún archivo o el formato es inválido." });
             }
 
+            // Validacion de la forma binaria (Magic Bytes)
+            const fs = require('fs');
+            const buffer = fs.readFileSync(req.file.path);
+            const header = buffer.toString('hex', 0, 12).toLowerCase();
+            
+            const audioSignatures = [
+                '494433', 'fffbe0', 'fffbe2', 'fffbe4', 'fffbe6', '52494646', '4f67675300020000'
+            ];
+            
+            const isValidAudio = audioSignatures.some(sig => header.startsWith(sig));
+            
+            if (!isValidAudio) {
+                fileHelper.deleteFile(req.file.path); // Limpieza de archivo huérfano
+                return res.status(415).json({ error: "El archivo no es un audio válido" });
+            }
+
             const { display_name, category, bpm } = req.body;
             
             if (!display_name || !category) {
@@ -53,6 +69,10 @@ class SampleController
         {
             // En caso de error de DB, intentar limpiar el archivo físico
             if (req.file) fileHelper.deleteFile(`/uploads/${req.file.filename}`);
+
+            if (error.message === 'INVALID_MIME_TYPE' || error.code === 'LIMIT_FILE_TYPE') {
+                return res.status(415).json({ error: "El archivo no es un audio válido" });
+            }
             
             res.status(500).json({ message: "Error durante la carga del sample.", error: error.message });
         }
