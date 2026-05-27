@@ -41,7 +41,10 @@ const fileFilter = (req, file, cb) => {
     }
 };
 
-const upload = multer({ storage, fileFilter });
+// Se establece el tamaño maximo permitido para un archivo
+const limits = { fileSize: 5 * 1024 *1024};
+
+const upload = multer({ storage, fileFilter, limits });
 
 // 'audioFile' es el nombre del campo en el formulario
 module.exports = upload.single('audioFile');
