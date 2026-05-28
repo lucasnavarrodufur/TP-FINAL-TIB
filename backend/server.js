@@ -99,7 +99,7 @@ app.use((err, req, res, next) => {
     }
     // Error por exceso de peso de Multer
     else if (err.code === 'LIMIT_FILE_SIZE'){
-        return res.status(413).json({ error: "El archivo superó el tamaño maximo"});
+        return res.status(413).json({ error: "El archivo supera el límite de tamaño permitido"});
     }
     res.status(500).json({ message: "Error en el servidor", error: err.message });
 });

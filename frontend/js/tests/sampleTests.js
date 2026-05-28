@@ -61,3 +61,39 @@ testUtils.createTestButton("Test Subir Sample (Simulado)", async (btn) => {
     testUtils.log(data);
     if (response.ok) testUtils.setSuccess(btn);
 });
+
+/**
+ * Test: POST /api/samples/upload (Simulado)
+ */
+testUtils.createTestButton("Test Subir Sample Demasiado Grande (Simulado)", async (btn) => {
+    //Asegurar y guardar una sesión válida
+    await okLogin();
+    const token = localStorage.getItem('test_token');
+    
+    // Creamos un FormData
+    const formData = new FormData();
+    formData.append('display_name', 'Test Loop Pedagogico');
+    formData.append('category', 'Drums');
+    formData.append('bpm', '120');
+
+    // Calculamos 6MB en bytes
+    const byteSize = 6 * 1024 * 1024;
+
+    // Creamos un arreglo de bytes vacíos con ese peso exacto
+    const heavyContent = new Uint8Array(byteSize);
+
+    // Simulamos un archivo WAV (binario que pesa 6MB)
+    const blob = new Blob([heavySize], { type: 'audio/wav' });
+    formData.append('audioFile', blob, 'DRUM_LOOP_01.wav');
+
+    const response = await fetch('/api/samples/upload', {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${token}` },
+        body: formData
+    });
+
+    const data = await response.json();
+    testUtils.log(data);
+
+    if (response.status === 413) testUtils.setSuccess(btn);
+});
