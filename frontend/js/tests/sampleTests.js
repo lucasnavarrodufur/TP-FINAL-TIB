@@ -83,7 +83,7 @@ testUtils.createTestButton("Test Subir Sample Demasiado Grande (Simulado)", asyn
     const heavyContent = new Uint8Array(byteSize);
 
     // Simulamos un archivo WAV (binario que pesa 6MB)
-    const blob = new Blob([heavySize], { type: 'audio/wav' });
+    const blob = new Blob([heavyContent], { type: 'audio/wav' });
     formData.append('audioFile', blob, 'DRUM_LOOP_01.wav');
 
     const response = await fetch('/api/samples/upload', {

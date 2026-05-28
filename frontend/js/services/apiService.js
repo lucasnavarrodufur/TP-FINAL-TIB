@@ -6,7 +6,7 @@
 */
 
 // Configuración base de la API
-const API_URL = "http://localhost:3000/api";
+const API_URL = "/api";
 
 const apiService = {
     // Función centralizada para peticiones Fetch
@@ -25,12 +25,27 @@ const apiService = {
         }
 
         const response = await fetch(`${API_URL}${endpoint}`, config);
-        const result = await response.json();
-
+        
         // Si el token expiró (401), forzamos logout automático
         if (response.status === 401) authHelper.logout();
 
-        if (!response.ok) throw new Error(result.error || result.message || 'Error en la petición');
-        return result;
+        if (!response.ok) {
+            try {
+                // Intentamos leer el mensaje de error enviado por el backend
+                const errorData = await response.json();
+                const mensajeError = errorData.error || errorData.message || `Error del servidor (${response.status})`;
+                throw new Error(mensajeError);
+                
+            } catch (jsonError) {
+                // Si la respuesta no es JSON lanzamos mensajes manuales para que el modal no se quede vacío.
+                if (response.status === 413) throw new Error("El archivo supera el límite de tamaño permitido");
+                if (response.status === 415) throw new Error("El archivo no es un audio válido");
+                
+                throw new Error(`Error de conexión o respuesta inválida (${response.status})`);
+            }
+        }
+
+        //Solo si todo salió bien (200 o 201) parseamos el JSON
+        return await response.json();
     }
 };
