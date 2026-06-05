@@ -36,7 +36,7 @@ if (loginForm)
         catch (error)
         {
             // Usar el componente modal para mostrar el error del backend
-            showModal('Error de Acceso', error.message);
+            showModal('Error de Acceso', error.message, '/login');
         }
     });
 }
@@ -54,13 +54,11 @@ if (registerForm)
         {
             await apiService.request('/auth/register', 'POST', { username, password });
             // En lugar de alert...
-            showModal('¡Éxito!', 'Usuario creado. Ahora puedes iniciar sesión.');
-            // Esperar un momento o usar el botón del modal para redirigir
-            setTimeout(() => { window.location.href = '/login'; }, 2000);
+            showModal('¡Éxito!', 'Usuario creado. Ahora puedes iniciar sesión.', '/login');
         }
         catch (error)
         {
-            showModal('Error de Registro', error.message);
+            showModal('Error de Registro', error.message, '/register');
         }
     });
 }
