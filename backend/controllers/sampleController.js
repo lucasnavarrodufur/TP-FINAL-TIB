@@ -15,14 +15,14 @@ async handleMulterError(err, req, res) {
     console.error('Error de Multer:', err);
     
     if (err.message === 'INVALID_MIME_TYPE') {
-        return res.status(415).json({ error: "El archivo no es un audio válido" });
+        return res.status(415).json({ message: "El archivo no es un audio válido" });
     }
     
     if (err.code === 'LIMIT_FILE_SIZE') {
-        return res.status(413).json({ error: "El archivo supera el límite de tamaño permitido" });
+        return res.status(413).json({ message: "El archivo supera el límite de tamaño permitido" });
     }
     
-    return res.status(500).json({ message: "Error durante la carga", error: err.message });
+    return res.status(500).json({ message: "Error durante la carga"+ err.message });
 }
     // Método para subir un sample y guardarlo en la BD  
     async uploadSample(req, res) 
@@ -48,7 +48,7 @@ async handleMulterError(err, req, res) {
             
             if (!isValidAudio) {
                 fileHelper.deleteFile(req.file.path); // Limpieza de archivo huérfano
-                return res.status(415).json({ error: "El archivo no es un audio válido" });
+                return res.status(415).json({ message: "El archivo no es un audio válido" });
             }
 
             const { display_name, category, bpm } = req.body;
@@ -84,7 +84,7 @@ async handleMulterError(err, req, res) {
             // En caso de error de DB, intentar limpiar el archivo físico
             if (req.file) fileHelper.deleteFile(`/uploads/${req.file.filename}`);
 
-            res.status(500).json({ message: "Error durante la carga del sample.", error: error.message });
+            res.status(500).json({ message: "Error durante la carga del sample." + error.message });
         }
     }
 

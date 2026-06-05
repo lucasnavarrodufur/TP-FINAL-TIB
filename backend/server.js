@@ -93,7 +93,7 @@ else
 // --- Manejo de errores global ---
 app.use((err, req, res, next) => {
     console.error(err.stack);
-    res.status(500).json({ message: "Error en el servidor", error: err.message });
+    res.status(500).json({ message: "Error en el servidor"+ err.message });
 });
 
 const PORT = process.env.PORT || 3000;
