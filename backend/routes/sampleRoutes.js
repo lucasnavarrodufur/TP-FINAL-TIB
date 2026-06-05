@@ -10,7 +10,7 @@ const router = express.Router();
 const sampleController = require('../controllers/sampleController');
 
 //configuración de Multer para subir archivos de audio:
-const uploadMiddleware = require('../config/multerConfig');
+const handleUpload = require('../config/multerConfig');
 
 const { verifyToken } = require('../middleware/authMiddleware');
 
@@ -18,15 +18,7 @@ const { verifyToken } = require('../middleware/authMiddleware');
 router.use(verifyToken);
 
 // Subir un nuevo audio: POST /api/samples/upload
-// 'audioFile' es el nombre que debe tener el campo file en el FormData del frontend
-router.post('/upload', (req, res, next) => {
-    uploadMiddleware(req, res, (err) => {
-        if (err) {
-            return sampleController.handleMulterError(err, req, res);
-        }
-        next();
-    });
-}, sampleController.uploadSample);
+router.post('/upload', handleUpload, sampleController.uploadSample);
 
 // Listar mis samples: GET /api/samples/my-samples
 router.get('/my-samples', sampleController.getMySamples);

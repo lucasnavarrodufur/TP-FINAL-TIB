@@ -17,6 +17,8 @@
 const multer = require('multer');
 // const path = require('path');
 
+const sampleController = require('../controllers/sampleController');
+
 // Configuración de almacenamiento de Multer
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -47,4 +49,14 @@ const limits = { fileSize: 5 * 1024 *1024};
 const upload = multer({ storage, fileFilter, limits });
 
 // 'audioFile' es el nombre del campo en el formulario
-module.exports = upload.single('audioFile');
+const uploadSingle = upload.single('audioFile');
+
+// Si multer tiene un error lo redirecciona a sampleController
+const handleUpload = (req, res, next) => {
+    uploadSingle(req, res, (err) => {
+        if (err) return sampleController.handleMulterError(err, req, res);
+        next();
+    });
+};
+
+module.exports = handleUpload;
