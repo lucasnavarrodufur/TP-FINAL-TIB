@@ -140,7 +140,7 @@ testUtils.createTestButton("Test Subir Sample - MIME Type Inválido", async (btn
     testUtils.log(data);
 
     const esStatus415 = response.status === 415;
-    const mensajeCorrecto = data.error === 'El archivo no es un audio válido';
+    const mensajeCorrecto = data.message === 'El archivo no es un audio válido';
     
     if (esStatus415 && mensajeCorrecto) {
         testUtils.setSuccess(btn);
