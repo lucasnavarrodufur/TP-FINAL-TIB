@@ -53,7 +53,7 @@ const apiService = {
     async request(endpoint, method = 'GET', data = null, isFormData = false) {
         // Usamos el helper en lugar de acceder directo a localStorage o sessionStorage
         const token = authHelper.getToken();
-        
+
         const headers = {};
         if (!isFormData) headers['Content-Type'] = 'application/json';
         if (token) headers['Authorization'] = `Bearer ${token}`;

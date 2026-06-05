@@ -49,6 +49,7 @@ const sampleRoutes = require('./routes/sampleRoutes');
 const adminRoutes = require('./routes/adminRoutes');
 const viewRoutes = require('./routes/viewRoutes');
 const testsRoutes = require('./routes/testsRoutes');
+const { error } = require('console');
 
 const app = express();
 
@@ -92,9 +93,6 @@ else
 // --- Manejo de errores global ---
 app.use((err, req, res, next) => {
     console.error(err.stack);
-    if (err.message === 'INVALID_MIME_TYPE' || err.code === 'LIMIT_FILE_TYPE') {
-        return res.status(415).json({ error: "El archivo no es un audio válido" });
-    }
     res.status(500).json({ message: "Error en el servidor", error: err.message });
 });
 

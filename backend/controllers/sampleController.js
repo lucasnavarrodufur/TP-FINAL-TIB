@@ -10,7 +10,21 @@ const sampleRepo = require('../repositories/sampleRepo');
 
 class SampleController 
 {
-    // Método para subir un sample y guardarlo en la BD
+    // Nuevo método para manejar errores de Multer
+async handleMulterError(err, req, res) {
+    console.error('Error de Multer:', err);
+    
+    if (err.message === 'INVALID_MIME_TYPE') {
+        return res.status(415).json({ error: "El archivo no es un audio válido" });
+    }
+    
+    if (err.code === 'LIMIT_FILE_SIZE') {
+        return res.status(413).json({ error: "El archivo supera el límite de tamaño permitido" });
+    }
+    
+    return res.status(500).json({ message: "Error durante la carga", error: err.message });
+}
+    // Método para subir un sample y guardarlo en la BD  
     async uploadSample(req, res) 
     {
         try
@@ -70,10 +84,6 @@ class SampleController
             // En caso de error de DB, intentar limpiar el archivo físico
             if (req.file) fileHelper.deleteFile(`/uploads/${req.file.filename}`);
 
-            if (error.message === 'INVALID_MIME_TYPE' || error.code === 'LIMIT_FILE_TYPE') {
-                return res.status(415).json({ error: "El archivo no es un audio válido" });
-            }
-            
             res.status(500).json({ message: "Error durante la carga del sample.", error: error.message });
         }
     }
