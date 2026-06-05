@@ -9,7 +9,7 @@
  * Componente UI para manejar notificaciones modales
  * Inyecta el HTML necesario si no existe y lo muestra.
  */
- function showModal(title, message) {
+ function showModal(title, message, redirectUrl = null) {
     let modal = document.getElementById('msgModal');
 
     // Si el modal no existe, lo creamos dinámicamente sin innerHTML
@@ -38,8 +38,15 @@
         const btnClose = document.createElement('button');
         btnClose.className = 'w3-button w3-right w3-yellow w3-margin-bottom';
         btnClose.textContent = 'Cerrar';
-        // Evento nativo para cerrar
-        btnClose.addEventListener('click', () => modal.style.display = 'none');
+        // Evento nativo para cerrar y redireccionar si es necesario
+        btnClose.addEventListener('click', () => {
+            modal.style.display = 'none';
+
+            //Si hay una URL de redirección, se sigue al cerrar el modal
+            if (modal.dataset.redirectUrl) {
+                window.location.href = modal.dataset.redirectUrl;
+            }
+        });
 
         bodyDiv.appendChild(msgElem);
         bodyDiv.appendChild(btnClose);
@@ -47,6 +54,13 @@
         content.appendChild(bodyDiv);
         modal.appendChild(content);
         document.body.appendChild(modal);
+    }
+
+    if (redirectUrl) {
+        modal.dataset.redirectUrl = redirectUrl;
+    }
+    else {
+        delete modal.dataset.redirectUrl;
     }
 
     // Actualizar contenido y mostrar
