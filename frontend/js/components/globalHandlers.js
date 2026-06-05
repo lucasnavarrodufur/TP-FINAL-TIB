@@ -18,7 +18,7 @@ window.addEventListener('unauthenticated', () => {
     localStorage.clear();
 
     // Mostrar modal de sesión expirada
-    showModal('Error de autenticación', 'Sesión inválida o corrompida');
+    showModal('Error de autenticación', 'Sesión inválida o corrompida. Vuelva a iniciar sesión.');
 
     const modalButton = document.querySelector('#msgModal button');
     if (modalButton) {
