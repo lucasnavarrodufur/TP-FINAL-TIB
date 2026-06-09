@@ -41,7 +41,7 @@ async handleMulterError(err, req, res) {
             const header = buffer.toString('hex', 0, 12).toLowerCase();
             
             const audioSignatures = [
-                '494433', 'fffbe0', 'fffbe2', 'fffbe4', 'fffbe6', '52494646', '4f67675300020000'
+                '494433', 'fffbe0', 'fffbe2', 'fffbe4', 'fffbe6', '52494646', '4f67675300020000','664c6143'
             ];
             
             const isValidAudio = audioSignatures.some(sig => header.startsWith(sig));
@@ -99,7 +99,7 @@ async handleMulterError(err, req, res) {
         }
         catch (error)
         {
-            res.status(500).json({ message: "Error al recuperar la biblioteca.", error: error.message });
+            res.status(500).json({ message: "Error al recuperar la biblioteca." + error.message });
         }
     }
 
@@ -128,7 +128,7 @@ async handleMulterError(err, req, res) {
         }
         catch (error)
         {
-            res.status(500).json({ message: "Error al eliminar el sample.", error: error.message });
+            res.status(500).json({ message: "Error al eliminar el sample." + error.message });
         }
     }
 }
