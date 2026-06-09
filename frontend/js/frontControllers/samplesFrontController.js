@@ -79,11 +79,28 @@ const uploadForm = document.getElementById('uploadForm');
 if (uploadForm) {
     uploadForm.addEventListener('submit', async (e) => {
         e.preventDefault();
+        
+        //Se obtiene el archivo antes de validar
+        const fileInput = document.getElementById('audioFile');
+        const file = fileInput.files[0];
+        
+        //Se valida el archivo en el frontend
+        if (file) {
+            const allowedTypes = ['audio/mpeg', 'audio/wav', 'audio/ogg', 'audio/flac'];
+            
+            //Validar MIME Type
+            if (!allowedTypes.includes(file.type)) {
+                showModal('Error al subir', 'El archivo no es un audio válido.');
+                return; // Detiene el envío
+            }
+        }
+
+        //Si pasa las validaciones se envia al backend
         const formData = new FormData();
         formData.append('display_name', document.getElementById('display_name').value);
         formData.append('category', document.getElementById('category').value);
         formData.append('bpm', document.getElementById('bpm').value);
-        formData.append('audioFile', document.getElementById('audioFile').files[0]);
+        formData.append('audioFile', file);
 
         try {
             await apiService.request('/samples/upload', 'POST', formData, true);
