@@ -93,6 +93,12 @@ if (uploadForm) {
                 showModal('Error al subir', 'El archivo no es un audio válido.');
                 return; // Detiene el envío
             }
+
+            //Validar tamaño menor o igual a 5MB
+             if (file.size > 5 * 1024 * 1024) {
+                showModal('Error', 'El archivo supera el límite de tamaño permitido');
+                return; // Detiene el envío
+            }
         }
 
         //Si pasa las validaciones se envia al backend
